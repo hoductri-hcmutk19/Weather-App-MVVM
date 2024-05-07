@@ -1,7 +1,9 @@
 package com.example.weather.di
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
+import com.example.weather.data.repository.source.local.AppDatabase
 import com.example.weather.data.repository.source.remote.api.middleware.BooleanAdapter
 import com.example.weather.data.repository.source.remote.api.middleware.DoubleAdapter
 import com.example.weather.data.repository.source.remote.api.middleware.IntegerAdapter
@@ -11,10 +13,15 @@ import com.example.weather.utils.dispatchers.DispatcherProvider
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val AppModule = module {
     single { provideResources(get()) }
+
+    single { provideAppDatabase(androidContext()) }
+
+    factory { get<AppDatabase>().weatherDao() }
 
     single { provideBaseDispatcherProvider() }
 
@@ -23,6 +30,10 @@ val AppModule = module {
 
 fun provideResources(app: Application): Resources {
     return app.resources
+}
+
+fun provideAppDatabase(context: Context): AppDatabase {
+    return AppDatabase.getInstance(context)
 }
 
 fun provideBaseDispatcherProvider(): BaseDispatcherProvider {

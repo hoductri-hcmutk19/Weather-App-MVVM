@@ -1,5 +1,8 @@
 package com.example.weather.data.model
 
+import com.example.weather.data.model.entity.Weather
+import com.example.weather.data.model.entity.WeatherBasic
+import com.example.weather.utils.ext.combineWithCountry
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -163,4 +166,41 @@ data class HourlyResponse(
             val speed: Double?
         )
     }
+}
+
+fun HourlyResponse.toWeather(): Weather {
+    val latitude: Double? = city?.coord?.lat
+    val longitude: Double? = city?.coord?.lon
+    val timeZone: Int? = city?.timezone
+    val cityName: String? = city?.name
+    val country: String? = city?.country
+    val isFavorite: String? = null
+    val weatherCurrent: WeatherBasic? = null
+    val weatherHourlyList: List<WeatherBasic>? = list?.map { it.toWeatherBasic() }
+    val weatherDailyList: List<WeatherBasic>? = null
+    val id = cityName.combineWithCountry(country)
+
+    return Weather(
+        id,
+        latitude,
+        longitude,
+        timeZone,
+        cityName,
+        country,
+        isFavorite,
+        weatherCurrent,
+        weatherHourlyList,
+        weatherDailyList
+    )
+}
+
+fun HourlyResponse.Hourly.toWeatherBasic(): WeatherBasic {
+    return WeatherBasic(
+        dt,
+        main?.temp,
+        weather?.firstOrNull()?.main,
+        null,
+        null,
+        null
+    )
 }

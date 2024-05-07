@@ -3,7 +3,7 @@ package com.example.weather.data.repository.source
 import com.example.weather.data.model.CurrentResponse
 import com.example.weather.data.model.DailyResponse
 import com.example.weather.data.model.HourlyResponse
-import com.example.weather.data.model.Weather
+import com.example.weather.data.model.entity.Weather
 
 interface WeatherDataSource {
     /**
@@ -16,7 +16,6 @@ interface WeatherDataSource {
         fun insertFavoriteWeather(weather: Weather)
         fun getAllLocalWeathers(): List<Weather>
         fun getLocalWeather(id: String): Weather?
-        fun getAllLocalOveralls(): List<Weather>
         fun deleteWeather(id: String)
     }
 
