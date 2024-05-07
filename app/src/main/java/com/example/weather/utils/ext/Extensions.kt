@@ -1,3 +1,5 @@
 package com.example.weather.utils.ext
 
-class Extensions
+fun String?.combineWithCountry(country: String?): String {
+    return "$this$country"
+}

@@ -1,5 +1,8 @@
 package com.example.weather.data.model
 
+import com.example.weather.data.model.entity.Weather
+import com.example.weather.data.model.entity.WeatherBasic
+import com.example.weather.utils.ext.combineWithCountry
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -138,5 +141,42 @@ data class CurrentResponse(
         @SerializedName("speed")
         @Expose
         val speed: Double?
+    )
+}
+
+fun CurrentResponse.toWeather(): Weather {
+    val latitude: Double? = coord?.lat
+    val longitude: Double? = coord?.lon
+    val timeZone: Int? = timezone
+    val cityName: String? = name
+    val country: String? = sys?.country
+    val isFavorite: String? = null
+    val weatherCurrent: WeatherBasic? = this.toWeatherBasic()
+    val weatherHourlyList: List<WeatherBasic>? = null
+    val weatherDailyList: List<WeatherBasic>? = null
+    val id = cityName.combineWithCountry(country)
+
+    return Weather(
+        id,
+        latitude,
+        longitude,
+        timeZone,
+        cityName,
+        country,
+        isFavorite,
+        weatherCurrent,
+        weatherHourlyList,
+        weatherDailyList
+    )
+}
+
+fun CurrentResponse.toWeatherBasic(): WeatherBasic {
+    return WeatherBasic(
+        dt,
+        main?.temp,
+        weather?.firstOrNull()?.main,
+        weather?.firstOrNull()?.description,
+        main?.humidity,
+        wind?.speed
     )
 }
