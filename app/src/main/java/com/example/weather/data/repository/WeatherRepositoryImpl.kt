@@ -12,33 +12,33 @@ class WeatherRepositoryImpl(
     private val localDataSource: WeatherDataSource.Local,
     private val remoteDataSource: WeatherDataSource.Remote
 ) : KoinComponent, WeatherRepository {
-    override fun insertCurrentWeather(current: Weather, hourly: Weather, daily: Weather) {
+    override suspend fun insertCurrentWeather(current: Weather, hourly: Weather, daily: Weather) {
         localDataSource.insertCurrentWeather(current, hourly, daily)
     }
 
-    override fun insertCurrentWeather(weather: Weather) {
+    override suspend fun insertCurrentWeather(weather: Weather) {
         localDataSource.insertCurrentWeather(weather)
     }
 
-    override fun insertFavoriteWeather(current: Weather, hourly: Weather, daily: Weather) {
+    override suspend fun insertFavoriteWeather(current: Weather, hourly: Weather, daily: Weather) {
         localDataSource.insertFavoriteWeather(current, hourly, daily)
     }
 
-    override fun insertFavoriteWeather(weather: Weather) {
+    override suspend fun insertFavoriteWeather(weather: Weather) {
         localDataSource.insertFavoriteWeather(weather)
     }
 
-    override fun getAllLocalWeathers(): List<Weather> {
+    override suspend fun getAllLocalWeathers(): List<Weather> {
         return localDataSource.getAllLocalWeathers().sortedWith(
             compareBy({ it.isFavorite == Constant.TRUE }, { it.city })
         )
     }
 
-    override fun getLocalWeather(id: String): Weather? {
+    override suspend fun getLocalWeather(id: String): Weather? {
         return localDataSource.getLocalWeather(id)
     }
 
-    override fun deleteWeather(id: String) {
+    override suspend fun deleteWeather(id: String) {
         localDataSource.deleteWeather(id)
     }
 

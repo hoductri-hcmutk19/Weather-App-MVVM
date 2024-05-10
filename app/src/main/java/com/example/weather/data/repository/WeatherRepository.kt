@@ -7,13 +7,13 @@ interface WeatherRepository {
     /**
      * Local
      */
-    fun insertCurrentWeather(current: Weather, hourly: Weather, daily: Weather)
-    fun insertCurrentWeather(weather: Weather)
-    fun insertFavoriteWeather(current: Weather, hourly: Weather, daily: Weather)
-    fun insertFavoriteWeather(weather: Weather)
-    fun getAllLocalWeathers(): List<Weather>
-    fun getLocalWeather(id: String): Weather?
-    fun deleteWeather(id: String)
+    suspend fun insertCurrentWeather(current: Weather, hourly: Weather, daily: Weather)
+    suspend fun insertCurrentWeather(weather: Weather)
+    suspend fun insertFavoriteWeather(current: Weather, hourly: Weather, daily: Weather)
+    suspend fun insertFavoriteWeather(weather: Weather)
+    suspend fun getAllLocalWeathers(): List<Weather>
+    suspend fun getLocalWeather(id: String): Weather?
+    suspend fun deleteWeather(id: String)
 
     /**
      * Remote
