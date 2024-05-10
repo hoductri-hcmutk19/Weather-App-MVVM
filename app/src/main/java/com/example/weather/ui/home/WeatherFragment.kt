@@ -1,16 +1,15 @@
 package com.example.weather.ui.home
 
-import android.app.Activity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Observer
 import com.example.weather.R
 import com.example.weather.data.model.entity.Weather
 import com.example.weather.databinding.FragmentWeatherBinding
 import com.example.weather.utils.Constant
-import com.example.weather.utils.PermissionUtils
 import com.example.weather.utils.Utils
 import com.example.weather.utils.Utils.getIcon
 import com.example.weather.utils.ext.kelvinToCelsius
@@ -18,6 +17,8 @@ import com.example.weather.utils.ext.mpsToKmph
 import com.example.weather.utils.ext.unixTimestampToDateTimeString
 import com.example.weather.utils.ext.unixTimestampToHourString
 import com.example.weather.base.BaseFragment
+import com.example.weather.ui.SharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @Suppress("TooManyFunctions")
@@ -37,6 +38,7 @@ class WeatherFragment :
     private lateinit var mSpinnerAdapter: ArrayAdapter<String>
 
     override val viewModel: WeatherViewModel by viewModel()
+    override val sharedViewModel: SharedViewModel by activityViewModel()
 
     override fun initView() {
         mSpinnerAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, mListItemSpinner)
@@ -62,6 +64,12 @@ class WeatherFragment :
 
     @Suppress("NestedBlockDepth")
     override fun initData() {
+        sharedViewModel.isNetworkAvailable.observe(viewLifecycleOwner) { isNetworkEnable ->
+            mIsNetworkEnable = isNetworkEnable
+            Toast.makeText(context, "$isNetworkEnable", Toast.LENGTH_LONG).show()
+        }
+
+        //Toast.makeText(context, "$mIsNetworkEnable", Toast.LENGTH_LONG).show()
         arguments?.let {
             mLatitude = it.getDouble(Constant.LATITUDE_KEY)
             mLongitude = it.getDouble(Constant.LONGITUDE_KEY)
@@ -111,15 +119,6 @@ class WeatherFragment :
             if (isDBEmpty) {
                 onDBEmpty()
             }
-        }
-    }
-
-    override fun checkNetwork(activity: Activity?) {
-        if (activity?.let { PermissionUtils.isNetWorkEnabled(it) } == true) {
-            mIsNetworkEnable = true
-        } else {
-            mIsNetworkEnable = false
-            onInternetConnectionFailed()
         }
     }
 
@@ -213,14 +212,6 @@ class WeatherFragment :
         }
     }
 
-    private fun onInternetConnectionFailed() {
-        Toast.makeText(
-            context,
-            getString(R.string.message_network_not_responding),
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
     private fun onDBEmpty() {
         if (mIsNetworkEnable) {
             viewModel.getWeather(
@@ -239,7 +230,6 @@ class WeatherFragment :
     }
 
     private fun onRefresh() {
-        checkNetwork(activity)
         val itemID = mWeatherList[mPosition].id
         val currentID = mWeatherCurrent?.id
         val isCurrent = itemID == currentID

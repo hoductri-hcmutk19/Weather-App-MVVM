@@ -1,10 +1,15 @@
 package com.example.weather.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.IntentFilter
 import android.location.Location
+import android.net.ConnectivityManager
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.weather.R
+import com.example.weather.base.BaseActivity
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.ui.home.WeatherFragment
 import com.example.weather.utils.Constant
@@ -12,30 +17,50 @@ import com.example.weather.utils.PermissionUtils
 import com.example.weather.utils.Utils
 import com.example.weather.utils.addFragmentToActivity
 import com.example.weather.utils.listener.OnFetchListener
+import com.example.weather.utils.network.NetworkStateReceiver
+import com.example.weather.utils.network.NetworkStateReceiver.NetworkStateReceiverListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.example.weather.base.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class MainActivity :
     BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate),
-    OnFetchListener {
+    OnFetchListener, NetworkStateReceiverListener {
     private var mCurrentLocation: Location? = null
     private var mLastLocation: Location? = null
+    private var networkStateReceiver: NetworkStateReceiver? = null
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     override val viewModel: MainViewModel by viewModel()
+    override val sharedViewModel: SharedViewModel by viewModel()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initialize() {
-        onDeviceOffline()
+        requestPermissions()
         onLocationRequest()
+        startNetworkBroadcastReceiver(this)
+    }
+
+    private fun startNetworkBroadcastReceiver(currentContext: Context) {
+        networkStateReceiver = NetworkStateReceiver()
+        networkStateReceiver!!.addListener((currentContext as NetworkStateReceiverListener))
+        registerNetworkBroadcastReceiver(currentContext)
+    }
+
+    private fun registerNetworkBroadcastReceiver(currentContext: Context) {
+        currentContext.registerReceiver(networkStateReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+    }
+
+    private fun unregisterNetworkBroadcastReceiver(currentContext: Context) {
+        currentContext.unregisterReceiver(networkStateReceiver)
     }
 
     @SuppressLint("MissingPermission")
     override fun onResume() {
         super.onResume()
+        registerNetworkBroadcastReceiver(this)
 
         mFusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
@@ -50,9 +75,9 @@ class MainActivity :
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun onDeviceOffline() {
-        requestPermissions()
+    override fun onPause() {
+        unregisterNetworkBroadcastReceiver(this)
+        super.onPause()
     }
 
     private fun onLocationRequest() {
@@ -114,5 +139,18 @@ class MainActivity :
         } else {
             initWeatherView(location)
         }
+    }
+
+    override fun networkAvailable() {
+        sharedViewModel.checkNetwork(true)
+    }
+
+    override fun networkUnavailable() {
+        Toast.makeText(
+            this,
+            getString(R.string.message_network_not_responding),
+            Toast.LENGTH_SHORT
+        ).show()
+        sharedViewModel.checkNetwork(false)
     }
 }
