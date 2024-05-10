@@ -1,5 +1,6 @@
-package com.sun.android.base
+package com.example.weather.base
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,10 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: FragmentInfla
 
     protected abstract fun bindData()
 
+    protected abstract fun checkNetwork(activity: Activity?)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        checkNetwork(activity)
         _binding = inflate.invoke(inflater, container, false)
         return binding.root
     }

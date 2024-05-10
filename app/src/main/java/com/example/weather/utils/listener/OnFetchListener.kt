@@ -1,3 +1,7 @@
 package com.example.weather.utils.listener
 
-class OnFetchListener
+import android.location.Location
+
+interface OnFetchListener {
+    fun onDataLocation(location: Location?)
+}
