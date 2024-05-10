@@ -1,3 +1,7 @@
 package com.example.weather.utils.listener
 
-class OnItemClickListener
+import android.view.View
+
+interface OnItemClickListener {
+    fun onItemClickListener(view: View, position: Int)
+}
