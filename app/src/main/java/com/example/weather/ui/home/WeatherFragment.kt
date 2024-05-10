@@ -3,12 +3,14 @@ package com.example.weather.ui.home
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import com.example.weather.R
 import com.example.weather.base.BaseFragment
 import com.example.weather.data.model.entity.Weather
 import com.example.weather.databinding.FragmentWeatherBinding
 import com.example.weather.ui.SharedViewModel
+import com.example.weather.ui.detail.DetailFragment
 import com.example.weather.utils.Constant
 import com.example.weather.utils.Utils
 import com.example.weather.utils.Utils.getIcon
@@ -16,6 +18,7 @@ import com.example.weather.utils.ext.kelvinToCelsius
 import com.example.weather.utils.ext.mpsToKmph
 import com.example.weather.utils.ext.unixTimestampToDateTimeString
 import com.example.weather.utils.ext.unixTimestampToHourString
+import com.example.weather.utils.replaceFragmentToActivity
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,7 +52,13 @@ class WeatherFragment :
             }
         }
         binding.layoutWeatherBasic.cardView.setOnClickListener {
-            // TODO implement later
+            activity?.let {
+                (it as AppCompatActivity).replaceFragmentToActivity(
+                    it.supportFragmentManager,
+                    DetailFragment.newInstance(mWeatherList[mPosition]),
+                    R.id.container
+                )
+            }
         }
         binding.btnNavMap.setOnClickListener {
             // TODO implement later
