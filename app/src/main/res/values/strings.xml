@@ -40,4 +40,5 @@
     <string name="notification_content">HiWeather chúc bạn một ngày mới tốt lành!</string>
     <string name="temperature">Nhiệt độ:</string>
     <string name="wind_speed">Gió:</string>
+    <string name="message_network_connected">Đã kết nối Internet</string>
 </resources>

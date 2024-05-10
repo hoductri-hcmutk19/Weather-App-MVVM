@@ -40,4 +40,5 @@
     <string name="notification_content">HiWeather wishes you a good day!</string>
     <string name="temperature">Temperature:</string>
     <string name="wind_speed">Wind:</string>
+    <string name="message_network_connected">Internet connected</string>
 </resources>
