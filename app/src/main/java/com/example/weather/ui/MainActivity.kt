@@ -31,6 +31,7 @@ class MainActivity :
     private var mCurrentLocation: Location? = null
     private var mLastLocation: Location? = null
     private var mNetworkStateReceiver: NetworkStateReceiver? = null
+    private var mIsNetworkEnable: Boolean = true
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
@@ -108,7 +109,15 @@ class MainActivity :
     }
 
     override fun networkAvailable() {
+        if (!mIsNetworkEnable){
+            Toast.makeText(
+                this,
+                getString(R.string.message_network_connected),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         sharedViewModel.checkNetwork(true)
+        mIsNetworkEnable = true
     }
 
     override fun networkUnavailable() {
@@ -118,6 +127,7 @@ class MainActivity :
             Toast.LENGTH_SHORT
         ).show()
         sharedViewModel.checkNetwork(false)
+        mIsNetworkEnable = false
     }
 
     private fun onLocationRequest() {
@@ -135,7 +145,7 @@ class MainActivity :
         location?.let { location ->
             addFragmentToActivity(
                 supportFragmentManager,
-                WeatherFragment.newInstance(location.latitude, location.longitude),
+                WeatherFragment.newInstance(location.latitude, location.longitude, mIsNetworkEnable),
                 R.id.container
             )
         }

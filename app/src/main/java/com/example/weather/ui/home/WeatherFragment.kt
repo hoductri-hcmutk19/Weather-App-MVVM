@@ -11,6 +11,7 @@ import com.example.weather.data.model.entity.Weather
 import com.example.weather.databinding.FragmentWeatherBinding
 import com.example.weather.ui.SharedViewModel
 import com.example.weather.ui.detail.DetailFragment
+import com.example.weather.ui.map.MapFragment
 import com.example.weather.utils.Constant
 import com.example.weather.utils.Utils
 import com.example.weather.utils.Utils.getIcon
@@ -61,7 +62,17 @@ class WeatherFragment :
             }
         }
         binding.btnNavMap.setOnClickListener {
-            // TODO implement later
+            if (mIsNetworkEnable) {
+                activity?.let {
+                    (it as AppCompatActivity).replaceFragmentToActivity(
+                        it.supportFragmentManager,
+                        MapFragment.newInstance(
+                            mWeatherList[mPosition]
+                        ),
+                        R.id.container
+                    )
+                }
+            }
         }
 
         val initialSelectedPosition = binding.layoutHeader.spinner.selectedItemPosition
@@ -78,6 +89,7 @@ class WeatherFragment :
         arguments?.let {
             mLatitude = it.getDouble(Constant.LATITUDE_KEY)
             mLongitude = it.getDouble(Constant.LONGITUDE_KEY)
+            mIsNetworkEnable = it.getBoolean(Constant.CHECK_NETWORK_KEY)
             if (!mIsAppStarted) {
                 mIsAppStarted = true
                 viewModel.getWeather(mLatitude, mLongitude, mPosition, mIsNetworkEnable, true)
@@ -252,11 +264,13 @@ class WeatherFragment :
     }
 
     companion object {
-        fun newInstance(latitude: Double, longitude: Double) = WeatherFragment().apply {
-            arguments = bundleOf(
-                Constant.LATITUDE_KEY to latitude,
-                Constant.LONGITUDE_KEY to longitude
-            )
-        }
+        fun newInstance(latitude: Double, longitude: Double, checkNetwork: Boolean) =
+            WeatherFragment().apply {
+                arguments = bundleOf(
+                    Constant.LATITUDE_KEY to latitude,
+                    Constant.LONGITUDE_KEY to longitude,
+                    Constant.CHECK_NETWORK_KEY to checkNetwork
+                )
+            }
     }
 }
