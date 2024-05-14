@@ -8,20 +8,28 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.example.weather.R
 import com.example.weather.base.BaseActivity
 import com.example.weather.databinding.ActivityMainBinding
+import com.example.weather.notification.DailyWorker
 import com.example.weather.ui.home.WeatherFragment
 import com.example.weather.utils.Constant
 import com.example.weather.utils.PermissionUtils
 import com.example.weather.utils.Utils
 import com.example.weather.utils.addFragmentToActivity
+import com.example.weather.utils.ext.updateWidget
 import com.example.weather.utils.listener.OnFetchListener
 import com.example.weather.utils.network.NetworkStateReceiver
 import com.example.weather.utils.network.NetworkStateReceiver.NetworkStateReceiverListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 class MainActivity :
@@ -43,6 +51,7 @@ class MainActivity :
         requestPermissions()
         onLocationRequest()
         startNetworkBroadcastReceiver(this)
+        dailyWorkManager()
     }
 
     @SuppressLint("MissingPermission")
@@ -65,6 +74,7 @@ class MainActivity :
 
     override fun onPause() {
         unregisterNetworkBroadcastReceiver(this)
+        this@MainActivity.updateWidget()
         super.onPause()
     }
 
@@ -134,6 +144,28 @@ class MainActivity :
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    private fun dailyWorkManager() {
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(false)
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val myRequest = PeriodicWorkRequest.Builder(
+            DailyWorker::class.java,
+            Constant.HOURS_IN_DAY,
+            TimeUnit.HOURS
+        ).setConstraints(constraints)
+            .setInitialDelay(Utils.setTimeInitWorker(), TimeUnit.SECONDS)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            Constant.DAILY_WORK_MANAGER_ID,
+            ExistingPeriodicWorkPolicy.KEEP,
+            myRequest
+        )
+    }
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermissions() {
         if (!PermissionUtils.checkPermissions(this)) {
@@ -145,7 +177,11 @@ class MainActivity :
         location?.let { location ->
             addFragmentToActivity(
                 supportFragmentManager,
-                WeatherFragment.newInstance(location.latitude, location.longitude, mIsNetworkEnable),
+                WeatherFragment.newInstance(
+                    location.latitude,
+                    location.longitude,
+                    mIsNetworkEnable
+                ),
                 R.id.container
             )
         }
@@ -162,7 +198,10 @@ class MainActivity :
     }
 
     private fun registerNetworkBroadcastReceiver(currentContext: Context) {
-        currentContext.registerReceiver(mNetworkStateReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        currentContext.registerReceiver(
+            mNetworkStateReceiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
     }
 
     private fun unregisterNetworkBroadcastReceiver(currentContext: Context) {

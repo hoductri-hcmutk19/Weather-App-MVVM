@@ -16,6 +16,7 @@ object Constant {
     const val LONGITUDE_KEY = "LONGITUDE"
     const val WEATHER_KEY = "WEATHER"
     const val CHECK_NETWORK_KEY = "CHECK NETWORK"
+    const val DAILY_WORK_MANAGER_ID = "daily_id"
     const val NIGHT_TIME_START = 18
     const val NIGHT_TIME_END = 5
     const val TRUE = "true"
