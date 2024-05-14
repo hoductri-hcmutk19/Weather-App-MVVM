@@ -2,9 +2,14 @@
 
 package com.example.weather.utils.ext
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.weather.utils.Constant
+import com.example.weather.widget.WeatherWidgetProvider
 import java.text.SimpleDateFormat
 import java.time.ZoneOffset
 import java.util.Calendar
@@ -125,4 +130,20 @@ fun Double.kelvinToCelsius(): Int {
 
 fun Double.mpsToKmph(): Int {
     return (this * Constant.MPS_TO_KMPH_NUMBER).toInt()
+}
+
+fun Context.updateWidget() {
+    val widgetUpdateIntent = Intent(this, WeatherWidgetProvider::class.java).apply {
+        action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        putExtra(
+            AppWidgetManager.EXTRA_APPWIDGET_IDS,
+            AppWidgetManager.getInstance(this@updateWidget).getAppWidgetIds(
+                ComponentName(
+                    this@updateWidget,
+                    WeatherWidgetProvider::class.java
+                )
+            )
+        )
+    }
+    sendBroadcast(widgetUpdateIntent)
 }
