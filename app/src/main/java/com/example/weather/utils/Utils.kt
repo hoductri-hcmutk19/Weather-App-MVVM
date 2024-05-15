@@ -83,13 +83,15 @@ object Utils {
         Icon.CLEAR to R.drawable.ic_clear_day,
         Icon.RAIN to R.drawable.ic_rain_day,
         Icon.SNOW to R.drawable.ic_snow_day,
-        Icon.CLOUDS to R.drawable.ic_clouds_day
+        Icon.CLOUDS to R.drawable.ic_clouds_day,
+        Icon.SQUALL to R.drawable.ic_rain_day
     )
 
     private fun getNightIcons() = hashMapOf(
         Icon.CLEAR to R.drawable.ic_clear_night,
         Icon.RAIN to R.drawable.ic_rain_night,
         Icon.SNOW to R.drawable.ic_snow_night,
-        Icon.CLOUDS to R.drawable.ic_clouds_night
+        Icon.CLOUDS to R.drawable.ic_clouds_night,
+        Icon.SQUALL to R.drawable.ic_rain_night
     )
 }

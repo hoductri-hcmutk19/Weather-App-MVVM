@@ -3,6 +3,7 @@ package com.example.weather.utils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.weather.R
 import com.example.weather.data.anotation.ResourceID
 import com.example.weather.utils.ext.notNull
 
@@ -12,7 +13,7 @@ fun AppCompatActivity.addFragmentToActivity(
     @ResourceID idContainer: Int
 ) {
     fragmentManager.beginTransaction()
-        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
         .add(idContainer, fragment, fragment::class.java.simpleName)
         .addToBackStack(fragment::class.java.simpleName)
         .commit()
@@ -24,7 +25,7 @@ fun AppCompatActivity.replaceFragmentToActivity(
     @ResourceID idContainer: Int
 ) {
     fragmentManager.beginTransaction()
-        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+        .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
         .replace(idContainer, fragment)
         .addToBackStack(fragment::class.java.simpleName)
         .commit()
@@ -37,7 +38,7 @@ fun AppCompatActivity.removeFragmentFromActivity(
     val existingFragment = fragmentManager.findFragmentById(fragment.id)
     if (existingFragment != null) {
         fragmentManager.beginTransaction()
-            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+            .setCustomAnimations(R.animator.fade_in, R.animator.fade_out)
             .remove(fragment)
             .commit()
     }

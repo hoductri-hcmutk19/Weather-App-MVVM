@@ -5,13 +5,15 @@ import com.example.weather.data.anotation.Icon.Companion.CLEAR
 import com.example.weather.data.anotation.Icon.Companion.CLOUDS
 import com.example.weather.data.anotation.Icon.Companion.RAIN
 import com.example.weather.data.anotation.Icon.Companion.SNOW
+import com.example.weather.data.anotation.Icon.Companion.SQUALL
 
 @Retention(AnnotationRetention.SOURCE)
 @StringDef(
     CLEAR,
     RAIN,
     SNOW,
-    CLOUDS
+    CLOUDS,
+    SQUALL
 )
 annotation class Icon {
     companion object {
@@ -19,5 +21,6 @@ annotation class Icon {
         const val RAIN = "Rain"
         const val SNOW = "Snow"
         const val CLOUDS = "Clouds"
+        const val SQUALL = "Squall"
     }
 }
