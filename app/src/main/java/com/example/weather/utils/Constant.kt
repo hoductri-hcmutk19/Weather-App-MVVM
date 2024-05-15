@@ -32,4 +32,6 @@ object Constant {
     const val HOURS_IN_DAY = 24L
     const val MORNING_NOTIFICATION_TIME = 8
     const val SECONDS_IN_HOUR = 3600
+    const val DETAIL = "detail"
+    const val DELETE = "delete"
 }

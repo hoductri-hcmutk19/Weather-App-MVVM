@@ -17,6 +17,7 @@ import com.example.weather.data.model.entity.Weather
 import com.example.weather.databinding.FragmentMapBinding
 import com.example.weather.ui.SharedViewModel
 import com.example.weather.ui.detail.DetailFragment
+import com.example.weather.ui.favorite.FavoriteFragment
 import com.example.weather.utils.Constant
 import com.example.weather.utils.Utils
 import com.example.weather.utils.Utils.getIcon
@@ -57,6 +58,7 @@ class MapFragment :
     override val sharedViewModel: SharedViewModel by activityViewModel()
 
     @SuppressLint("MissingPermission")
+    @Suppress("LongMethod")
     override fun initView() {
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
@@ -111,7 +113,13 @@ class MapFragment :
         })
 
         binding.btnFavoriteLocation.setOnClickListener {
-            // TODO implement later
+            activity?.let {
+                (it as AppCompatActivity).replaceFragmentToActivity(
+                    it.supportFragmentManager,
+                    FavoriteFragment.newInstance(),
+                    R.id.container
+                )
+            }
         }
 
         binding.icBack.setOnClickListener {

@@ -57,7 +57,7 @@ class DetailFragment :
         // TODO implement later
     }
 
-    override fun onItemClickListener(view: View, position: Int) {
+    override fun onItemClickListener(view: View, position: Int, action: String) {
         mHourlyPosition = position
         binding.layoutHourly.recyclerViewHourly.children.iterator().forEach { item ->
             item as CardView

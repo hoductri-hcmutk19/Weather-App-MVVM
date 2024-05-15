@@ -33,7 +33,7 @@
     <string name="cloudy">Cloudy</string>
     <string name="ho_chi_minh_vn">Ho Chi Minh, VN</string>
     <string name="location_not_exist">The location you are looking for does not exist. Please enter another location!</string>
-    <string name="list_of_your_favorite_places">List of your favorite places</string>
+    <string name="favorite_location_list">Favorite Location List</string>
     <string name="utc_07_00">UTC+07:00</string>
     <string name="delete">Delete</string>
     <string name="good_morning">Good morning</string>
@@ -41,4 +41,6 @@
     <string name="temperature">Temperature:</string>
     <string name="wind_speed">Wind:</string>
     <string name="message_network_connected">Internet connected</string>
+    <string name="last_update">Last update</string>
+    <string name="favorite_list_empty">The favorites list is currently empty</string>
 </resources>

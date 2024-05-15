@@ -17,4 +17,5 @@
     <color name="buttonDeleteBackground">#FF0000</color>
     <color name="cardBackgroundOpacity">#33FFFFFF</color>
     <color name="transparent">#00000000</color> <!-- Fully transparent -->
+    <color name="textMini">#E4E4E4</color>
 </resources>
