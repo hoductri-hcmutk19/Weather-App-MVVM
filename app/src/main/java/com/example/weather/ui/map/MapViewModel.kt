@@ -1,6 +1,7 @@
 package com.example.weather.ui.map
 
 import android.accounts.NetworkErrorException
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,6 +28,9 @@ class MapViewModel(private val weatherRepository: WeatherRepository) : ViewModel
 
     private val _isExist = SingleLiveData<Boolean>()
     val isExist: LiveData<Boolean> = _isExist
+
+    private val _weatherList = SingleLiveData<List<Weather>>()
+    val weatherList: LiveData<List<Weather>> = _weatherList
 
     fun insertFavoriteWeather(weather: Weather) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -63,7 +67,7 @@ class MapViewModel(private val weatherRepository: WeatherRepository) : ViewModel
 
                 insertWeatherIfDataAvailable(current, hourly, daily)
             } catch (e: NetworkErrorException) {
-                println(e)
+                Log.e("MapViewModel", "Exception occurred", e)
             } finally {
                 mIsDataFetching = false
             }
@@ -78,6 +82,13 @@ class MapViewModel(private val weatherRepository: WeatherRepository) : ViewModel
             } else {
                 _isExist.postValue(false)
             }
+        }
+    }
+
+    fun getLocalWeatherList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listWeatherLocal = weatherRepository.getAllLocalWeathers()
+            _weatherList.postValue(listWeatherLocal)
         }
     }
 

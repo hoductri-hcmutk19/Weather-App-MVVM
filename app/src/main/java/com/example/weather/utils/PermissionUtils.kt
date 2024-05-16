@@ -10,6 +10,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -63,7 +64,7 @@ object PermissionUtils {
                     listener
                 )
             } catch (e: SecurityException) {
-                println(e)
+                Log.e("PermissionUtils", "Exception occurred", e)
             }
         } else {
             turnOnLocation(activity)

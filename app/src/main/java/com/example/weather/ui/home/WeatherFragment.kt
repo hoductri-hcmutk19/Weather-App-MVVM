@@ -67,7 +67,8 @@ class WeatherFragment :
                     (it as AppCompatActivity).replaceFragmentToActivity(
                         it.supportFragmentManager,
                         MapFragment.newInstance(
-                            mWeatherList[mPosition]
+                            mWeatherList[mPosition],
+                            mPosition
                         ),
                         R.id.container
                     )
@@ -125,6 +126,7 @@ class WeatherFragment :
         }
 
         viewModel.listWeather.observe(this) { listWeather ->
+            mWeatherList = listWeather
             onGetSpinnerList(listWeather)
         }
 
@@ -134,6 +136,7 @@ class WeatherFragment :
 
         viewModel.isDBEmpty.observe(this) { isDBEmpty ->
             if (isDBEmpty) {
+                mPosition = 0
                 onDBEmpty()
             }
         }
@@ -172,7 +175,6 @@ class WeatherFragment :
     }
 
     private fun onGetSpinnerList(weatherList: List<Weather>) {
-        mWeatherList = weatherList
         val newListItemSpinner: ArrayList<String> = arrayListOf()
         weatherList.forEach { mWeather ->
             mWeather.city?.let { cityName ->

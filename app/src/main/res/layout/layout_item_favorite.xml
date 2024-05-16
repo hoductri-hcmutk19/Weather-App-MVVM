@@ -52,7 +52,6 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toTopOf="@id/tv_time_title"
-        app:layout_constraintEnd_toEndOf="@+id/tv_city"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView

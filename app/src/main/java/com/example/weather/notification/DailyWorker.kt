@@ -1,16 +1,18 @@
 package com.example.weather.notification
 
-import android.annotation.SuppressLint
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.weather.R
@@ -34,26 +36,30 @@ import kotlin.coroutines.suspendCoroutine
 class DailyWorker(context: Context, workerParameters: WorkerParameters) :
     Worker(context, workerParameters), KoinComponent {
 
-    @SuppressLint("MissingPermission")
-    // FIXME ensure proper permission checks and handle them appropriately
     override fun doWork(): Result {
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val repository: WeatherRepository by inject()
 
-                val fusedLocationClient =
-                    LocationServices.getFusedLocationProviderClient(applicationContext)
+                if (ContextCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    val fusedLocationClient =
+                        LocationServices.getFusedLocationProviderClient(applicationContext)
 
-                val location = suspendCoroutine { continuation ->
-                    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                        continuation.resume(location)
-                    }.addOnFailureListener { _ ->
-                        continuation.resume(null)
+                    val location = suspendCoroutine { continuation ->
+                        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                            continuation.resume(location)
+                        }.addOnFailureListener { _ ->
+                            continuation.resume(null)
+                        }
                     }
-                }
 
-                if (location != null) {
-                    fetchWeather(repository, location)
+                    if (location != null) {
+                        fetchWeather(repository, location)
+                    }
                 }
             } catch (e: IOException) {
                 Log.e("DailyWorker", "Exception occurred: $e")
@@ -93,8 +99,6 @@ class DailyWorker(context: Context, workerParameters: WorkerParameters) :
         }
     }
 
-    @SuppressLint("MissingPermission")
-    // FIXME ensure proper permission checks and handle them appropriately
     private fun showNotification(title: String, content: String) {
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -133,9 +137,14 @@ class DailyWorker(context: Context, workerParameters: WorkerParameters) :
 
             notificationManager.createNotificationChannel(channel)
         }
-
-        with(NotificationManagerCompat.from(applicationContext)) {
-            notify(NOTIFICATION_ID, notification.build())
+        if (ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            with(NotificationManagerCompat.from(applicationContext)) {
+                notify(NOTIFICATION_ID, notification.build())
+            }
         }
     }
 
