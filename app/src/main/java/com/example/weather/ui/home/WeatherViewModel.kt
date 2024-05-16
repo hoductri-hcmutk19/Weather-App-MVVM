@@ -1,6 +1,7 @@
 package com.example.weather.ui.home
 
 import android.accounts.NetworkErrorException
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.data.model.entity.Weather
@@ -59,7 +60,7 @@ class WeatherViewModel(private val weatherRepository: WeatherRepository) : ViewM
 
                 insertWeatherIfDataAvailable(current, hourly, daily, isCurrent)
             } catch (e: NetworkErrorException) {
-                println(e)
+                Log.e("WeatherViewModel", "Exception occurred", e)
             } finally {
                 mIsDataFetching = false
             }

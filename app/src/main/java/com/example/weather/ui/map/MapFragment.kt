@@ -1,15 +1,18 @@
 package com.example.weather.ui.map
 
-import android.annotation.SuppressLint
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import com.example.weather.R
 import com.example.weather.base.BaseFragment
@@ -18,6 +21,7 @@ import com.example.weather.databinding.FragmentMapBinding
 import com.example.weather.ui.SharedViewModel
 import com.example.weather.ui.detail.DetailFragment
 import com.example.weather.ui.favorite.FavoriteFragment
+import com.example.weather.ui.home.WeatherFragment
 import com.example.weather.utils.Constant
 import com.example.weather.utils.Utils
 import com.example.weather.utils.Utils.getIcon
@@ -50,6 +54,7 @@ class MapFragment :
     private var mSelectedLatitude: Double = 0.0
     private var mSelectedLongitude: Double = 0.0
     private var mWeather: Weather? = null
+    private var mIndex: Int = 0
     private var mIsNetworkEnable: Boolean = false
     private var mIsWeatherLocalExist: Boolean = true
     private var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -57,8 +62,7 @@ class MapFragment :
     override val viewModel: MapViewModel by viewModel()
     override val sharedViewModel: SharedViewModel by activityViewModel()
 
-    @SuppressLint("MissingPermission")
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "ComplexMethod")
     override fun initView() {
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
@@ -66,17 +70,25 @@ class MapFragment :
 
         binding.btnCurrentLocation.setOnClickListener {
             if (mIsNetworkEnable) {
-                mFusedLocationClient?.lastLocation
-                    ?.addOnSuccessListener { location: Location? ->
-                        if (location != null) {
-                            mCurrentLatitude = location.latitude
-                            mCurrentLongitude = location.longitude
+                if (context?.let { context ->
+                    ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                } == PackageManager.PERMISSION_GRANTED
+                ) {
+                    mFusedLocationClient?.lastLocation
+                        ?.addOnSuccessListener { location: Location? ->
+                            if (location != null) {
+                                mCurrentLatitude = location.latitude
+                                mCurrentLongitude = location.longitude
+                            }
+                            mSelectedLatitude = mCurrentLatitude
+                            mSelectedLongitude = mCurrentLongitude
+                            viewModel.getWeatherRemote(mCurrentLatitude, mCurrentLongitude)
+                            moveToLocation(mCurrentLatitude, mCurrentLongitude)
                         }
-                        mSelectedLatitude = mCurrentLatitude
-                        mSelectedLongitude = mCurrentLongitude
-                        viewModel.getWeatherRemote(mCurrentLatitude, mCurrentLongitude)
-                        moveToLocation(mCurrentLatitude, mCurrentLongitude)
-                    }
+                }
             }
         }
 
@@ -88,7 +100,7 @@ class MapFragment :
                 try {
                     addressList = geocoder?.getFromLocationName(location, 1)
                 } catch (e: IOException) {
-                    println(e)
+                    Log.e("MapFragment", "Exception occurred", e)
                 }
                 if (addressList != null) {
                     if (addressList.isNotEmpty()) {
@@ -123,7 +135,24 @@ class MapFragment :
         }
 
         binding.icBack.setOnClickListener {
-            goBackFragment()
+            viewModel.getLocalWeatherList()
+            viewModel.weatherList.observe(this) { weatherList ->
+                if (mIndex >= weatherList.size && weatherList.isNotEmpty()) {
+                    activity?.let {
+                        (it as AppCompatActivity).replaceFragmentToActivity(
+                            it.supportFragmentManager,
+                            WeatherFragment.newInstance(
+                                weatherList[0].latitude!!,
+                                weatherList[0].longitude!!,
+                                mIsNetworkEnable
+                            ),
+                            R.id.container
+                        )
+                    }
+                } else {
+                    goBackFragment()
+                }
+            }
         }
 
         binding.layoutWeatherMap.cardViewMap.setOnClickListener {
@@ -169,6 +198,7 @@ class MapFragment :
         arguments?.let { args ->
             if (mSelectedLatitude == 0.0 && mSelectedLongitude == 0.0) {
                 mWeather = args.getParcelable(Constant.WEATHER_KEY)
+                mIndex = args.getInt(Constant.INDEX_KEY)
                 mSelectedLatitude = mWeather?.latitude ?: 0.0
                 mSelectedLongitude = mWeather?.longitude ?: 0.0
             }
@@ -288,10 +318,11 @@ class MapFragment :
     }
 
     companion object {
-        fun newInstance(weather: Weather) =
+        fun newInstance(weather: Weather, index: Int) =
             MapFragment().apply {
                 arguments = bundleOf(
-                    Constant.WEATHER_KEY to weather
+                    Constant.WEATHER_KEY to weather,
+                    Constant.INDEX_KEY to index
                 )
             }
     }

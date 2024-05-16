@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.weather.utils.Constant
 import com.example.weather.widget.WeatherWidgetProvider
@@ -29,7 +30,7 @@ fun Int.unixTimestampToDateTimeString(): String {
         outputDateFormat.timeZone = TimeZone.getDefault() // user's default time zone
         return outputDateFormat.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        println(e)
+        Log.e("Extensions", "Exception occurred", e)
     }
 
     return this.toString()
@@ -44,7 +45,7 @@ fun Int.unixTimestampToDateYearString(): String {
         outputDateFormat.timeZone = TimeZone.getDefault()
         return outputDateFormat.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        println(e)
+        Log.e("Extensions", "Exception occurred", e)
     }
 
     return this.toString()
@@ -59,7 +60,7 @@ fun Int.unixTimestampToDateMonthString(): String {
         outputDateFormat.timeZone = TimeZone.getDefault()
         return outputDateFormat.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        println(e)
+        Log.e("Extensions", "Exception occurred", e)
     }
 
     return this.toString()
@@ -74,7 +75,7 @@ fun Int.unixTimestampToDateString(): String {
         outputDateFormat.timeZone = TimeZone.getDefault()
         return outputDateFormat.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        println(e)
+        Log.e("Extensions", "Exception occurred", e)
     }
 
     return this.toString()
@@ -89,7 +90,7 @@ fun Int.unixTimestampToHourString(): String {
         outputDateFormat.timeZone = TimeZone.getDefault()
         return outputDateFormat.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        println(e)
+        Log.e("Extensions", "Exception occurred", e)
     }
 
     return this.toString()
@@ -104,7 +105,7 @@ fun Int.unixTimestampToTimeString(): String {
         outputDateFormat.timeZone = TimeZone.getDefault()
         return outputDateFormat.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        println(e)
+        Log.e("Extensions", "Exception occurred", e)
     }
 
     return this.toString()
