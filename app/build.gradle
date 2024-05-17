@@ -23,10 +23,27 @@ android {
         buildConfigField "String", "MAP_KEY", "\"" + getMapKey() + "\""
     }
 
+    signingConfigs {
+        release {
+            release {
+                keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: project.properties['RELEASE_KEY_ALIAS']
+                keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: project.properties['RELEASE_KEY_PASSWORD']
+                storeFile file(System.getenv("RELEASE_STORE_FILE") ?: project.properties['RELEASE_STORE_FILE'])
+                storePassword System.getenv("RELEASE_STORE_PASSWORD") ?: project.properties['RELEASE_STORE_PASSWORD']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            debuggable true
         }
     }
     compileOptions {
