@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HiWeather2</string>
+    <string name="app_name">HiWeather</string>
     <string name="view_weather">View Weather</string>
     <string name="degree_celsius_symbol">°C</string>
     <string name="description_weather_condition_icon">weather condition icon</string>
@@ -34,6 +34,17 @@
     <string name="ho_chi_minh_vn">Ho Chi Minh, VN</string>
     <string name="location_not_exist">The location you are looking for does not exist. Please enter another location!</string>
     <string name="favorite_location_list">Favorite Location List</string>
+    <string name="about_us">About us</string>
+    <string name="rate_app">Rate us on Store</string>
+    <string name="share_app">Share this app</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="other_apps">Other apps</string>
+    <string name="version">App version - v%1$s</string>
+    <string name="share_message">I\'m using HiWeather – the fastest and most convenient weather app. Try it NOW!\nhttps://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="support_message">Write us about your ideas or problem! It is important to us and we will try to solve them. Thank you!\n\n</string>
+    <string name="no_app_mail_found">No apps found to send email</string>
     <string name="utc_07_00">UTC+07:00</string>
     <string name="delete">Delete</string>
     <string name="good_morning">Good morning</string>

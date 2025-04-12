@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HiWeather2</string>
+    <string name="app_name">HiWeather</string>
     <string name="view_weather">View Weather</string>
     <string name="degree_celsius_symbol">°C</string>
     <string name="description_weather_condition_icon">weather condition icon</string>
@@ -34,6 +34,17 @@
     <string name="ho_chi_minh_vn">Hồ Chí Minh, VN</string>
     <string name="location_not_exist">Vị trí bạn tìm kiếm không tồn tại. Vui lòng nhập vị trí khác!</string>
     <string name="favorite_location_list">Các địa điểm yêu thích</string>
+    <string name="about_us">Về chúng tôi</string>
+    <string name="rate_app">Đánh giá ứng dụng</string>
+    <string name="share_app">Chia sẻ ứng dụng</string>
+    <string name="contact_support">Liên hệ hỗ trợ</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="terms_and_conditions">Các điều khoản và điều kiện</string>
+    <string name="other_apps">Các ứng dụng khác của chúng tôi</string>
+    <string name="share_message">Tôi đang sử dụng HiWeather, ứng dụng thời tiết nhanh và tiện lợi nhất. Hãy thử NGAY!\nhttps://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="version">Phiên bản - v%1$s</string>
+    <string name="support_message">Hãy chia sẻ với chúng tôi ý tưởng hoặc vấn đề mà bạn gặp phải! Mọi đóng góp đều rất quan trọng và chúng tôi sẽ cố gắng giải quyết nhanh nhất có thể. Cảm ơn bạn!\n\n</string>
+    <string name="no_app_mail_found">Không tìm thấy ứng dụng nào để gửi email</string>
     <string name="utc_07_00">UTC+07:00</string>
     <string name="delete">Xóa</string>
     <string name="good_morning">Chào buổi sáng</string>
