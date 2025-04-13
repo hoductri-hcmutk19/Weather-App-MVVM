@@ -31,7 +31,7 @@ object Constant {
     const val FETCH_INTERVAL = 420 // 7 min
     const val MIN_DELAY_INIT_WORKER = 60L // 1min
     const val HOURS_IN_DAY = 24L
-    const val MORNING_NOTIFICATION_TIME = 9
+    const val MORNING_NOTIFICATION_TIME = 6
     const val SECONDS_IN_HOUR = 3600
     const val DETAIL = "detail"
     const val DELETE = "delete"

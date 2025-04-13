@@ -40,31 +40,26 @@ class MainActivity :
     private var mLastLocation: Location? = null
     private var mNetworkStateReceiver: NetworkStateReceiver? = null
     private var mIsNetworkEnable: Boolean = true
+    private var mIsNeedPermission: Boolean = false
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     override val viewModel: MainViewModel by viewModel()
     override val sharedViewModel: SharedViewModel by viewModel()
 
+    @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun initialize() {
         requestPermissions()
         onLocationRequest()
         startNetworkBroadcastReceiver(this)
         dailyWorkManager()
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun onResume() {
-        super.onResume()
-        registerNetworkBroadcastReceiver(this)
 
         mFusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 mLastLocation = location
                 initWeatherView(location)
             }
-
         PermissionUtils.getLastLocation(
             this,
             this,
@@ -72,15 +67,28 @@ class MainActivity :
         )
     }
 
+    @SuppressLint("MissingPermission")
+    override fun onResume() {
+        super.onResume()
+        registerNetworkBroadcastReceiver(this)
+        if (mIsNeedPermission) {
+            mFusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    mLastLocation = location
+                    initWeatherView(location)
+                }
+            PermissionUtils.getLastLocation(
+                this,
+                this,
+                PermissionUtils.isLocationEnabled(this)
+            )
+        }
+    }
+
     override fun onPause() {
         unregisterNetworkBroadcastReceiver(this)
         this@MainActivity.updateWidget()
         super.onPause()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        initWeatherView(mCurrentLocation)
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -169,17 +177,18 @@ class MainActivity :
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestPermissions() {
         if (!PermissionUtils.checkPermissions(this)) {
+            mIsNeedPermission = true
             PermissionUtils.requestPermissions(this)
         }
     }
 
     private fun initWeatherView(location: Location?) {
-        location?.let { location ->
+        location?.let { currentLocation ->
             addFragmentToActivity(
                 supportFragmentManager,
                 WeatherFragment.newInstance(
-                    location.latitude,
-                    location.longitude,
+                    currentLocation.latitude,
+                    currentLocation.longitude,
                     mIsNetworkEnable
                 ),
                 R.id.container

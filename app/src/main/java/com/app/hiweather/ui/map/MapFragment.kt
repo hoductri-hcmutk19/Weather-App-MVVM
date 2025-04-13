@@ -22,6 +22,7 @@ import com.app.hiweather.ui.SharedViewModel
 import com.app.hiweather.ui.detail.DetailFragment
 import com.app.hiweather.ui.favorite.FavoriteFragment
 import com.app.hiweather.ui.home.WeatherFragment
+import com.app.hiweather.ui.info.InfoFragment
 import com.app.hiweather.utils.Constant
 import com.app.hiweather.utils.Utils
 import com.app.hiweather.utils.Utils.getIcon
@@ -129,6 +130,16 @@ class MapFragment :
                 (it as AppCompatActivity).replaceFragmentToActivity(
                     it.supportFragmentManager,
                     FavoriteFragment.newInstance(),
+                    R.id.container
+                )
+            }
+        }
+
+        binding.btnAppInfo.setOnClickListener {
+            activity?.let {
+                (it as AppCompatActivity).replaceFragmentToActivity(
+                    it.supportFragmentManager,
+                    InfoFragment.newInstance(),
                     R.id.container
                 )
             }
