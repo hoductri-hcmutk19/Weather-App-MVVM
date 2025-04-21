@@ -29,6 +29,35 @@ Bạn có thể lo lắng khi thiết bị không có kết nối internet, làm
 
  ## Màn hình Splash
  
-<img src="https://github.com/user-attachments/assets/0d055253-9401-4092-9099-bf6b42243626" width="175">
+<img src="https://github.com/user-attachments/assets/0d055253-9401-4092-9099-bf6b42243626" width="180">
 
- ![image](https://github.com/user-attachments/assets/0d055253-9401-4092-9099-bf6b42243626)
+## Màn hình Home
+
+<img src="https://github.com/user-attachments/assets/43bbe0fc-8579-4ea6-8e8a-72913f485a17" width="180">
+
+<img src="https://github.com/user-attachments/assets/a941dc36-700d-43dc-9ceb-f6520d945127" width="180">
+
+## Màn hình Detail
+
+<img src="https://github.com/user-attachments/assets/808b3b14-f08b-4a6f-89e2-be3dea1b5ec2" width="180">
+
+<img src="https://github.com/user-attachments/assets/8dbf4f9e-31b9-4e30-b413-bc5695d5dc43" width="180">
+
+## Màn hình Map
+
+<img src="https://github.com/user-attachments/assets/00832ac0-05cd-41ac-a2c7-f06ac658f743" width="180">
+
+<img src="https://github.com/user-attachments/assets/3ee9babb-1da9-4dd5-938a-5fcc866505f9" width="180">
+
+## Màn hình Favorite
+
+<img src="https://github.com/user-attachments/assets/8153f609-a948-40bd-ac81-a8c6bec5826f" width="180">
+
+## Widget
+
+<img src="https://github.com/user-attachments/assets/5f22e40d-768e-4ab8-a5f9-8e447c57603b" width="180">
+
+## Daily Notification
+
+<img src="https://github.com/user-attachments/assets/2da697e5-1c8f-48ba-9f04-0ba7f84bb8d5" width="180">
+
